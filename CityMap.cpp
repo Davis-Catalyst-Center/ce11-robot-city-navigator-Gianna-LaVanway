@@ -50,3 +50,37 @@ void CityMap::printCity() const {
         std::cout << "\n";
     }
 }
+
+std::pair<std::vector<std::string>, int> CityMap::greedyPath(int start, int end) {
+    if (start < 0 || start >= (int)locations.size() || end < 0 || end >= (int)locations.size()) {
+        return {{}, -1};
+    } 
+    int smallestNeighbor = locations.size();
+    int smallestTime;
+    std::vector<std::string> visited;
+    int totalTime;
+    std::pair<std::vector<std::string>, int> returned;
+    visited.push_back(locations.at(start).name);
+    for(int i=0; i<locations.at(start).neighbors.size(); i++) {
+        if(locations.at(start).neighbors.at(i).second < smallestNeighbor) {
+            smallestNeighbor = locations.at(start).neighbors.at(i).first;
+            smallestTime = locations.at(start).neighbors.at(i).second;
+        }
+    }
+    
+    if(smallestNeighbor == end) {
+        visited.push_back(locations.at(smallestNeighbor).name);
+        totalTime = smallestTime;
+    }
+    else {
+        returned = greedyPath(smallestNeighbor, end);
+        for(int i=0; i<returned.first.size(); i++) {
+            visited.push_back(returned.first.at(i));
+        }
+        totalTime += returned.second;
+    }
+    returned.first = visited;
+    returned.second = totalTime;
+
+    return returned;
+}
