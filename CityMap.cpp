@@ -54,33 +54,73 @@ void CityMap::printCity() const {
 std::pair<std::vector<std::string>, int> CityMap::greedyPath(int start, int end) {
     if (start < 0 || start >= (int)locations.size() || end < 0 || end >= (int)locations.size()) {
         return {{}, -1};
-    } 
-    int smallestNeighbor = locations.size();
-    int smallestTime;
-    std::vector<std::string> visited;
-    int totalTime;
-    std::pair<std::vector<std::string>, int> returned;
-    visited.push_back(locations.at(start).name);
-    for(int i=0; i<locations.at(start).neighbors.size(); i++) {
-        if(locations.at(start).neighbors.at(i).second < smallestNeighbor) {
-            smallestNeighbor = locations.at(start).neighbors.at(i).first;
-            smallestTime = locations.at(start).neighbors.at(i).second;
-        }
     }
-    
-    if(smallestNeighbor == end) {
-        visited.push_back(locations.at(smallestNeighbor).name);
-        totalTime = smallestTime;
-    }
-    else {
-        returned = greedyPath(smallestNeighbor, end);
-        for(int i=0; i<returned.first.size(); i++) {
-            visited.push_back(returned.first.at(i));
-        }
-        totalTime += returned.second;
-    }
-    returned.first = visited;
-    returned.second = totalTime;
+    // location index
+    std::vector<int> visited;
+    // total travel time
+    int totalCost = 0;
+    // location index
+    int currentIndex = start;
+    // index of neighbor for current index
+    int smallestNeighbor;
+    // bool to see if neighbor has been visited
+    bool hasBeenVisited;
 
-    return returned;
+    // empty vector, will be the names of the locations visted before returning
+    std::vector<std::string> visitedNames;
+
+    // if every location is marked as visited, then we cannot reach the end
+    while(visited.size() < locations.size()) {
+        // reset smallestNeighbor for each iteration
+        smallestNeighbor = -1;
+        // for each neighbor of the current index, find which one has the shortest travel time
+        // start at index 0, to make sure that we don't end with a visited neightbor
+        for(int i=0; i<locations.at(currentIndex).neighbors.size(); i++) {
+            // reset visited to false
+            hasBeenVisited = false;
+            // check if current index has been visited
+            for(int j=0; j<visited.size(); j++) {
+                if(locations.at(currentIndex).neighbors.at(i).first == visited.at(j)) {
+                    hasBeenVisited = true;
+                }
+            }
+            // make sure smallest neighbor != -1
+            if(smallestNeighbor != -1) {
+                // compare the current neighbor to the smallest neighbor, and make sure it hasn't been visited
+                if(locations.at(currentIndex).neighbors.at(i).second < locations.at(currentIndex).neighbors.at(smallestNeighbor).second && !hasBeenVisited) {
+                    smallestNeighbor = i;
+                }
+            }
+            else {
+                // smallest neighbor == -1,
+                if(!hasBeenVisited) {
+                    smallestNeighbor = i;
+                }
+            }
+        }
+        // if every neighbor has already been visited, smallestNeighbor will still be -1
+        if(smallestNeighbor == -1) {
+            return {{}, -1};
+        }
+        // mark current index as visited
+        visited.push_back(currentIndex);
+        // increase travel time
+        totalCost += locations.at(currentIndex).neighbors.at(smallestNeighbor).second;
+        // set current index to the smallest neighbor's location index
+        currentIndex = locations.at(currentIndex).neighbors.at(smallestNeighbor).first;
+        
+        // before we go again, make sure we haven't reached the end
+        if(currentIndex == end) {
+            visited.push_back(currentIndex);
+            for(int i=0; i<visited.size(); i++) {
+                visitedNames.push_back(locations.at(visited.at(i)).name);
+            }
+            return {visitedNames, totalCost};
+        }
+    }
+    return {{}, -1};
+}
+
+int CityMap::heuristic(int from, int to) const {
+    return (int)sqrt(((locations.at(to).x - locations.at(from).x) ^ 2) + ((locations.at(to).y - locations.at(from).y) ^ 2));
 }

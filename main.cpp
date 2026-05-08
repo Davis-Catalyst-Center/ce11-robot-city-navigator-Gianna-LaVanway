@@ -18,25 +18,14 @@ int main() {
 
     /* Test all three algorithms on this route */
     // Greedy
-    std::pair<std::vector<std::string>, int> greedy = city.greedyPath(0,2);
-    std::cout << "Greedy Path: " << std::endl;
-    for(int i=0; i<greedy.first.size(); i++) {
-        std::cout << greedy.first.at(i) << " -> ";
-    }
-    std::cout << "\n---------\nTime: " << greedy.second << std::endl;
-
+    printResult("Greedy Algorithm", city.greedyPath(0,2));    
     std::cout << "\n";
 
     std::cout << "--- Route: Downtown -> Suburb South ---\n\n";
 
     /* Test all three algorithms on this route */
     // Greedy
-    greedy = city.greedyPath(0,7);
-    std::cout << "Greedy Path: " << std::endl;
-    for(int i=0; i<greedy.first.size(); i++) {
-        std::cout << greedy.first.at(i) << " -> ";
-    }
-    std::cout << "\n---------\nTime: " << greedy.second << std::endl;
+    printResult("Greedy Algorithm", city.greedyPath(0,7));
 
     std::cout << "\n";
 
@@ -51,6 +40,8 @@ void printResult(const std::string& algorithm, const std::pair<std::vector<std::
     std::cout << "[" << algorithm << "]\n";
     if (result.first.empty() || result.second == -1) {
         std::cout << "  No path found.\n";
+        //DELETE
+        std::cout << "  [DELETE] EMPTY.\n";
         return;
     }
     std::cout << "  Path: ";
