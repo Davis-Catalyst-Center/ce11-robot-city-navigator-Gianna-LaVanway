@@ -124,3 +124,11 @@ std::pair<std::vector<std::string>, int> CityMap::greedyPath(int start, int end)
 int CityMap::heuristic(int from, int to) const {
     return (int)sqrt(((locations.at(to).x - locations.at(from).x) ^ 2) + ((locations.at(to).y - locations.at(from).y) ^ 2));
 }
+
+std::vector<std::string> CityMap::reconstructPath(const std::vector<int>& prev, int start, int end) const {
+    std::vector<std::string> names;
+    for(int i=start; i<end; i++) {
+        names.push_back(locations.at(prev.at(i)).name);
+    }
+    return names;
+}
