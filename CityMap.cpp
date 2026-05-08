@@ -112,10 +112,7 @@ std::pair<std::vector<std::string>, int> CityMap::greedyPath(int start, int end)
         // before we go again, make sure we haven't reached the end
         if(currentIndex == end) {
             visited.push_back(currentIndex);
-            for(int i=0; i<visited.size(); i++) {
-                visitedNames.push_back(locations.at(visited.at(i)).name);
-            }
-            return {visitedNames, totalCost};
+            return {reconstructPath(visited, start, end), totalCost};
         }
     }
     return {{}, -1};
@@ -127,7 +124,7 @@ int CityMap::heuristic(int from, int to) const {
 
 std::vector<std::string> CityMap::reconstructPath(const std::vector<int>& prev, int start, int end) const {
     std::vector<std::string> names;
-    for(int i=start; i<end; i++) {
+    for(int i=0; i<prev.size(); i++) {
         names.push_back(locations.at(prev.at(i)).name);
     }
     return names;

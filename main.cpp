@@ -32,6 +32,8 @@ int main() {
     std::cout << "--- Route: [Your Choice] ---\n\n";
 
     /* Pick your own start/end pair and test all three algorithms */
+    // Greedy
+    printResult("Greedy Algorithm", city.greedyPath(0,10));
 
     return 0;
 }
@@ -40,8 +42,6 @@ void printResult(const std::string& algorithm, const std::pair<std::vector<std::
     std::cout << "[" << algorithm << "]\n";
     if (result.first.empty() || result.second == -1) {
         std::cout << "  No path found.\n";
-        //DELETE
-        std::cout << "  [DELETE] EMPTY.\n";
         return;
     }
     std::cout << "  Path: ";
