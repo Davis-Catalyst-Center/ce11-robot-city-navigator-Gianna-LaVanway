@@ -19,6 +19,9 @@ int main() {
     /* Test all three algorithms on this route */
     // Greedy
     printResult("Greedy Algorithm", city.greedyPath(0,2));    
+
+    // Dijkstra
+    printResult("Dijkstra Path", city.dijkstraPath(0,2));    
     std::cout << "\n";
 
     std::cout << "--- Route: Downtown -> Suburb South ---\n\n";
@@ -27,13 +30,19 @@ int main() {
     // Greedy
     printResult("Greedy Algorithm", city.greedyPath(0,7));
 
+    // Dijkstra
+    printResult("Dijkstra Path", city.dijkstraPath(0,7));    
     std::cout << "\n";
 
     std::cout << "--- Route: [Your Choice] ---\n\n";
 
     /* Pick your own start/end pair and test all three algorithms */
     // Greedy
-    printResult("Greedy Algorithm", city.greedyPath(0,10));
+    printResult("Greedy Algorithm", city.greedyPath(3,3));
+
+    // Dijkstra
+    printResult("Dijkstra Path", city.dijkstraPath(3,3));    
+    std::cout << "\n";
 
     return 0;
 }

@@ -118,6 +118,66 @@ std::pair<std::vector<std::string>, int> CityMap::greedyPath(int start, int end)
     return {{}, -1};
 }
 
+std::pair<std::vector<std::string>, int> CityMap::dijkstraPath(int start, int end) {
+    if (start < 0 || start >= (int)locations.size() || end < 0 || end >= (int)locations.size()) {
+        return {{}, -1};
+    }
+
+    std::priority_queue<std::pair<int,int>,std::vector<std::pair<int,int>>,std::greater<std::pair<int,int>>> priorityQueue;
+
+    // keep track of the distances
+    std::vector<int> distances(locations.size(), INT_MAX);
+    // keep track of the paths
+    std::vector<std::vector<int>> paths(locations.size());
+
+    // the distance from start-start is 0
+    // add start now, so there is something in priorityQueue
+    distances.at(start) = 0;
+    priorityQueue.push({0, start});
+
+    // while there are still items in the priority queue
+    while(!priorityQueue.empty()) {
+        std::pair<int, int> top = priorityQueue.top();
+        priorityQueue.pop();
+
+        int dist = top.first;
+        int current = top.second;
+        // update the path
+        // make sure that current isn't already there
+        bool added = false;
+        for(int i=0; i<paths.at(current).size(); i++) {
+            if(paths.at(current).at(i) == current) {
+                added = true;
+            }
+        }
+        if(!added) {
+            paths.at(current).push_back(current);
+        }
+        
+        // if this isn't the smallest possible distance for this location, skip it
+        if(dist > distances.at(current)) {
+            continue;
+        }
+
+        // check each neighbor of the node
+        for(int j=0; j<locations.at(current).neighbors.size(); j++) {
+            int nIndex = locations.at(current).neighbors.at(j).first;
+            int nDist = locations.at(current).neighbors.at(j).second;
+
+            // see if there is a smaller path to each neighbor than the current one
+            if(distances.at(current) + nDist < distances.at(nIndex)) {
+                distances.at(nIndex) = distances.at(current) + nDist;
+                // update the path saved to the shorter path
+                paths.at(nIndex) = paths.at(current);
+                priorityQueue.push({distances.at(nIndex), nIndex});
+            }
+        }
+    }
+    // at this point, distances has the smallest possible distance to each location
+
+    return {reconstructPath(paths.at(end), start, end), distances.at(end)};
+}
+
 int CityMap::heuristic(int from, int to) const {
     return (int)sqrt(((locations.at(to).x - locations.at(from).x) ^ 2) + ((locations.at(to).y - locations.at(from).y) ^ 2));
 }
