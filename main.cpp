@@ -42,7 +42,7 @@ int main() {
 
     std::cout << "\n";
 
-    std::cout << "--- Route: [Your Choice] ---\n\n";
+    std::cout << "--- Route: University -> University ---\n\n";
 
     /* Pick your own start/end pair and test all three algorithms */
     // Greedy
@@ -55,6 +55,53 @@ int main() {
     printResult("A* Algorithm", city.aStarPath(3,3));   
 
     std::cout << "\n";
+
+
+    std::cout << "--- Route: Suburb South -> Downtown ---\n\n";
+
+    /* Pick your own start/end pair and test all three algorithms */
+    // Greedy
+    printResult("Greedy Algorithm", city.greedyPath(7,0));
+
+    // Dijkstra
+    printResult("Dijkstra Path", city.dijkstraPath(7,0));   
+    
+    // A*
+    printResult("A* Algorithm", city.aStarPath(7,0));   
+
+    std::cout << "\n";
+
+
+    std::cout << "--- Route: out of bounds ---\n\n";
+
+    /* Pick your own start/end pair and test all three algorithms */
+    // Greedy
+    printResult("Greedy Algorithm", city.greedyPath(0,8));
+
+    // Dijkstra
+    printResult("Dijkstra Path", city.dijkstraPath(0,8));   
+    
+    // A*
+    printResult("A* Algorithm", city.aStarPath(0,8));   
+
+    std::cout << "\n";
+
+
+    std::cout << "--- Route: Harbor -> Medical Center ---\n\n";
+
+    /* Pick your own start/end pair and test all three algorithms */
+    // Greedy
+    printResult("Greedy Algorithm", city.greedyPath(1,5));
+
+    // Dijkstra
+    printResult("Dijkstra Path", city.dijkstraPath(1,5));   
+    
+    // A*
+    printResult("A* Algorithm", city.aStarPath(1,5));   
+
+    std::cout << "\n";
+
+
 
     return 0;
 }
