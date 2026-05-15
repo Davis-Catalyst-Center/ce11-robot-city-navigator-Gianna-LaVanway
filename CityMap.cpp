@@ -55,6 +55,10 @@ std::pair<std::vector<std::string>, int> CityMap::greedyPath(int start, int end)
     if (start < 0 || start >= (int)locations.size() || end < 0 || end >= (int)locations.size()) {
         return {{}, -1};
     }
+
+    if(start == end) {
+        return {reconstructPath({start}, start, end), 0};
+    }
     // location index
     std::vector<int> visited;
     // total travel time
@@ -123,6 +127,7 @@ std::pair<std::vector<std::string>, int> CityMap::dijkstraPath(int start, int en
         return {{}, -1};
     }
 
+    // {cost, index}
     std::priority_queue<std::pair<int,int>,std::vector<std::pair<int,int>>,std::greater<std::pair<int,int>>> priorityQueue;
 
     // keep track of the distances
@@ -176,6 +181,51 @@ std::pair<std::vector<std::string>, int> CityMap::dijkstraPath(int start, int en
     // at this point, distances has the smallest possible distance to each location
 
     return {reconstructPath(paths.at(end), start, end), distances.at(end)};
+}
+
+std::pair<std::vector<std::string>, int> CityMap::aStarPath(int start, int end) {
+    if (start < 0 || start >= (int)locations.size() || end < 0 || end >= (int)locations.size()) {
+        return {{}, -1};
+    }
+
+
+    std::vector<int> gScore(locations.size(), INT_MAX);
+    gScore.at(start) = 0;
+
+    std::vector<int> path;
+
+    //{fScore, index}
+    std::priority_queue<std::pair<int,int>,std::vector<std::pair<int,int>>,std::greater<std::pair<int,int>>> priorityQueue;
+
+    priorityQueue.push({heuristic(start, start), start});
+
+
+    while(!priorityQueue.empty()) {
+        std::pair<int,int> top = priorityQueue.top();
+        priorityQueue.pop();
+        int fScore = top.first;
+        int index = top.second;
+
+        bool added = false;
+        for(int i=0; i<path.size(); i++) {
+            if(path.at(i) == index) {
+                added = true;
+            }
+        }
+        if(!added) {
+            path.push_back(index);
+        }
+
+        for(int i=0; i<locations.at(index).neighbors.size(); i++) {
+            int newG = gScore.at(index) + locations.at(index).neighbors.at(i).second;
+            if(newG < gScore.at(locations.at(index).neighbors.at(i).first)) {
+                gScore.at(locations.at(index).neighbors.at(i).first) = newG;
+                fScore = newG + heuristic(locations.at(index).neighbors.at(i).first, end);
+                priorityQueue.push({fScore, locations.at(index).neighbors.at(i).first});
+            }
+        }
+    }
+    return {reconstructPath(path, start, end), gScore.at(end)};
 }
 
 int CityMap::heuristic(int from, int to) const {

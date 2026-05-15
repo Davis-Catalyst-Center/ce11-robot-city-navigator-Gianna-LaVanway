@@ -21,7 +21,11 @@ int main() {
     printResult("Greedy Algorithm", city.greedyPath(0,2));    
 
     // Dijkstra
-    printResult("Dijkstra Path", city.dijkstraPath(0,2));    
+    printResult("Dijkstra Path", city.dijkstraPath(0,2)); 
+    
+    // A*
+    printResult("A* Algorithm", city.aStarPath(0,2)); 
+
     std::cout << "\n";
 
     std::cout << "--- Route: Downtown -> Suburb South ---\n\n";
@@ -31,7 +35,11 @@ int main() {
     printResult("Greedy Algorithm", city.greedyPath(0,7));
 
     // Dijkstra
-    printResult("Dijkstra Path", city.dijkstraPath(0,7));    
+    printResult("Dijkstra Path", city.dijkstraPath(0,7));  
+
+    // A*
+    printResult("A* Algorithm", city.aStarPath(0,7));   
+
     std::cout << "\n";
 
     std::cout << "--- Route: [Your Choice] ---\n\n";
@@ -41,7 +49,11 @@ int main() {
     printResult("Greedy Algorithm", city.greedyPath(3,3));
 
     // Dijkstra
-    printResult("Dijkstra Path", city.dijkstraPath(3,3));    
+    printResult("Dijkstra Path", city.dijkstraPath(3,3));   
+    
+    // A*
+    printResult("A* Algorithm", city.aStarPath(3,3));   
+
     std::cout << "\n";
 
     return 0;
