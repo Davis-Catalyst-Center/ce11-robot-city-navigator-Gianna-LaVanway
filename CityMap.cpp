@@ -192,7 +192,7 @@ std::pair<std::vector<std::string>, int> CityMap::aStarPath(int start, int end) 
     std::vector<int> gScore(locations.size(), INT_MAX);
     gScore.at(start) = 0;
 
-    std::vector<int> path;
+    std::vector<std::vector<int>> paths(locations.size());
 
     //{fScore, index}
     std::priority_queue<std::pair<int,int>,std::vector<std::pair<int,int>>,std::greater<std::pair<int,int>>> priorityQueue;
@@ -207,13 +207,13 @@ std::pair<std::vector<std::string>, int> CityMap::aStarPath(int start, int end) 
         int index = top.second;
 
         bool added = false;
-        for(int i=0; i<path.size(); i++) {
-            if(path.at(i) == index) {
+        for(int i=0; i<paths.at(index).size(); i++) {
+            if(paths.at(index).at(i) == index) {
                 added = true;
             }
         }
         if(!added) {
-            path.push_back(index);
+            paths.at(index).push_back(index);
         }
 
         for(int i=0; i<locations.at(index).neighbors.size(); i++) {
@@ -222,10 +222,11 @@ std::pair<std::vector<std::string>, int> CityMap::aStarPath(int start, int end) 
                 gScore.at(locations.at(index).neighbors.at(i).first) = newG;
                 fScore = newG + heuristic(locations.at(index).neighbors.at(i).first, end);
                 priorityQueue.push({fScore, locations.at(index).neighbors.at(i).first});
+                paths.at(locations.at(index).neighbors.at(i).first) = paths.at(index);
             }
         }
     }
-    return {reconstructPath(path, start, end), gScore.at(end)};
+    return {reconstructPath(paths.at(end), start, end), gScore.at(end)};
 }
 
 int CityMap::heuristic(int from, int to) const {
